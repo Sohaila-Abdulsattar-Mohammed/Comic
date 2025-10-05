@@ -1,0 +1,198 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: #d3a902;
+  color: #fff;
+  font-family: "Bangers", sans-serif;
+}
+
+/* scroll-snap container to create a vertically snapping scroll effect */
+.snap {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden; /* to prevent horizontal scroll */
+  scroll-snap-type: y mandatory; /* snap to each section verticall */
+  scroll-behavior: smooth; /* for smooth scrolling */
+}
+
+/* each section is a full-screen snap target and centers its content */
+section {
+  height: 100vh;
+  scroll-snap-align: start; /* snap to the start of each section */
+  display: flex; /* centering layout vertically/horizontally via flex */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-inline: 20px; /* for some breathing room */
+  gap: 16px; /* space between image and text */
+  box-sizing: border-box;
+}
+
+/* alternating background colors for sections */
+.snap section:nth-child(odd) {
+  background: #f0c419;
+}
+
+/* each comic panel's frame */
+.frame {
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 8px;
+  border-style: solid;
+  border-width: 3px;
+  border-color: black;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* comic panel images */
+img.panel {
+  display: block;
+  width: auto; 
+  height: auto;
+  max-width: 80vw;
+  max-height: 70vh;
+  transform-origin: var(--fx, 50%) var(--fy, 50%); /* focal point set per-section for the zoom in effect */
+  transform: scale(1); /* default scale (no zoom) */
+  transition: transform 1.2s ease, transform-origin 1.2s ease; /* for the zoom into focal point effect */
+  will-change: transform, transform-origin; /* an optimization for animation */
+}
+
+/* default hover zoom for panels that do NOT use multi-step sequences (panels with data-zoom-seq are controlled by JS instead) */
+.frame:hover .panel:not([data-zoom-seq]) {
+  transform: scale(var(--zoom, 1.25)); /* zoom level set per-section */
+}
+
+/* for the narration text */
+p {
+  max-width: 70vw;
+  text-align: center;
+  line-height: 1.5;
+  font-size: 1.3rem;
+  margin: 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* two-column layout for vertical panels (3 & 4) */
+.two-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  margin: 0 auto;
+  padding: 0 5vw;
+  box-sizing: border-box;
+}
+
+/* image block within the vertical panel layout */
+.two-col img.panel {
+  max-height: 80vh; /*slightly taller*/
+}
+
+/* text block within the vertical panel layout */
+.two-col .narr {
+  flex: 1;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  margin: 0 3vw;
+}
+
+/* text alignment for the vertical panel layout */
+.two-col .narr.right-text {
+  text-align: right;
+}
+.two-col .narr.left-text {
+  text-align: left;
+}
+
+/* making the section a positioning context for its overlay */
+#panel6 {
+  position: relative;
+}
+
+/* base panel content; starts hidden (see .is-hidden below) */
+#panel6 .panel6-content {
+  position: relative;
+  z-index: 1; /* below the doors */
+  transform-origin: center;
+  transition: opacity 0.45s ease, transform 0.45s ease, filter 0.45s ease; /* for the reveal animation */
+}
+
+/* hidden state: used until the door game completes */
+#panel6 .panel6-content.is-hidden {
+  opacity: 0;
+  transform: scale(0.5);
+  filter: blur(6px);
+}
+
+/* when revealed (doors open), animate in; reveal state is added by JS when doors reach 100% open */
+#panel6.revealed .panel6-content {
+  opacity: 1;
+  transform: scale(1); /* pop back to normal size */
+  filter: none;
+  user-select: none; /* to prevent selection as it can happen due to the clicks when opening the door */
+}
+
+/* full-section overlay that holds both doors; sits above the panel content and captures clicks while closed */
+#panel6 .door-overlay {
+  position: absolute;
+  inset: 0; /* to cover the entire section */
+  z-index: 3; /* above the normal content */
+  overflow: hidden;
+  cursor: pointer; /* to indicate interactivity */
+  pointer-events: auto; /* to ensure it captures clicks */
+}
+
+/* door panels: each takes half the section width and slides horizontally */
+#panel6 .door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  will-change: transform; /* optimization for animation */
+  transition: transform 0.45s ease; /* used for the auto slide close on enter */
+  border-style: solid;
+  border-width: 3px;
+  border-color: black;
+}
+
+/* specific backgrounds for the left/right doors */
+#panel6 .door.left {
+  left: 0;
+  background-image: url("assets/images/DOOR_L.png");
+}
+#panel6 .door.right {
+  right: 0;
+  background-image: url("assets/images/DOOR_R.png");
+}
+
+/* while user is clicking, we control transforms via JS; this keeps tiny smoothing */
+#panel6 .door.anim {
+  transition: transform 0.06s linear;
+}
+
+/* once fully open, fade out doors and stop intercepting input */
+#panel6 .door.is-gone {
+  transition: opacity 0.35s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* on-screen hint instructing the user how to open the doors */
+#doorHint {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 4; /* above everything else */
+  margin: 0;
+  text-align: center;
+  opacity: 1;
+}

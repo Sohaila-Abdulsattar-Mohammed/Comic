@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Comic Panels</title>
+    <!-- for the font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&display=swap"
+      rel="stylesheet"
+    />
+    <!-- including our css -->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <!-- LANDING PAGE TODO -->
+    <div class="snap">
+      <section>
+        <h1 style="margin: 0">landing page</h1>
+      </section>
+
+      <!-- section 2 with panel 2 and text -->
+      <section style="--fx: 60%; --fy: 70%; --zoom: 2">
+        <div class="frame">
+          <img class="panel" src="assets/images/p2.png" alt="Panel 2" />
+        </div>
+        <p>
+          You finally reach D2 after an arduous, long hike. Finally, upon the
+          doors of the grand institution, you pull on the door— surprisingly to
+          no avail. You pull harder— still the doors don’t budge.
+        </p>
+      </section>
+
+      <!-- section 3 with panel 3 and text -->
+      <section style="--fx: 70%; --fy: 70%; --zoom: 3">
+        <div class="two-col">
+          <div class="frame">
+            <img class="panel" src="assets/images/p3.png" alt="Panel 3" />
+          </div>
+          <p class="narr right-text">
+            You try and try again, the smell of delicious food so tantalizingly
+            close yet still out of reach. Out of frustration, you kick the door—
+            hard— just hoping the doors would open already. Little did you know
+            that that was going to be a mistake.
+          </p>
+        </div>
+      </section>
+
+      <!-- section 4 with panel 4 and text -->
+      <section>
+        <div class="two-col">
+          <p class="narr left-text">
+            You turn around to look back at the door, to your sheer horror, an
+            angered face has appeared on the D2 door. Out of sheer shock, you
+            stumble back and fall. The door has become ALIVE!!!
+          </p>
+          <div class="frame">
+            <img
+              class="panel"
+              src="assets/images/p4.png"
+              alt="Panel 4"
+              data-zoom-seq="100% 20% 1.5; 0% 80% 2.5"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- section 5 with panel 5 and text -->
+      <section>
+        <div class="frame">
+          <img
+            class="panel"
+            src="assets/images/p5.png"
+            alt="Panel 5"
+            data-zoom-seq="10% 40% 3; 50% 50% 3; 80% 30% 3"
+          />
+        </div>
+        <p>
+          The door grows arms and legs! It’s ready to fight. You prepare
+          yourself to face off against the door.
+        </p>
+      </section>
+
+      <!-- section 6 with panel 6 and text, and the door overlay for interaction -->
+      <section id="panel6">
+        <div class="panel6-content is-hidden" aria-hidden="true">
+          <div class="frame">
+            <img
+              class="panel"
+              src="assets/images/p6.png"
+              alt="Panel 6"
+              data-zoom-seq="25% 100% 2; 80% 20% 2"
+            />
+          </div>
+          <p>
+            You triumph, and finally, you enter D2, earning your well-deserved
+            breakfast
+          </p>
+        </div>
+
+        <div class="door-overlay" id="doorScene">
+          <div id="doorL" class="door left" aria-label="Left door"></div>
+          <div id="doorR" class="door right" aria-label="Right door"></div>
+          <p id="doorHint">Click fast to open the doors!</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- including our javascript code -->
+    <script src="script.js"></script>
+  </body>
+</html>
