@@ -10,6 +10,8 @@ const DWELL_MS = 1200; //how long we linger at each stop
 const START_DELAY = 80; //tiny delay before starting so hover feels natural
 const OUTRO_MS = 300; //extra linger at final stop before zooming back out
 
+
+
 //find every panel image that declares a zoom pan sequence via data-zoom-seq
 document.querySelectorAll("img.panel[data-zoom-seq]").forEach((img) => {
   //per-image state
@@ -73,13 +75,13 @@ document.querySelectorAll("img.panel[data-zoom-seq]").forEach((img) => {
 
     //for each zoom stop
     steps.forEach((st) => {
-        //wait t milliseconds,
-        //then apply that focal point and scale (using CSS transform)
-        timers.push(setTimeout(() => applyOriginAndScale(st), t));
+      //wait t milliseconds,
+      //then apply that focal point and scale (using CSS transform)
+      timers.push(setTimeout(() => applyOriginAndScale(st), t));
 
-        //after each step, increase the timer offset by DWELL_MS
-        //so the next step starts after the previous one has "lingered" for a bit
-        t += DWELL_MS;
+      //after each step, increase the timer offset by DWELL_MS
+      //so the next step starts after the previous one has "lingered" for a bit
+      t += DWELL_MS;
     });
 
     //after the last step: linger briefly, then zoom all the way back out
@@ -141,7 +143,7 @@ function setDoors(pct) {
 // 2) Next frame: animate to closed (center) using CSS transition
 // 3) After that, switch to snappier transition for CPS-driven motion
 function resetToClosedWithSlide() {
-// reveal the doors and hint
+  // reveal the doors and hint
   doorL.classList.remove("is-gone");
   doorR.classList.remove("is-gone");
   hint.style.opacity = "1";
@@ -194,7 +196,7 @@ function startLoop() {
 
     //if doors are fully open: fade doors, disable overlay, and reveal content underneath
     if (open >= FULLY_OPEN) {
-        // Hide doors and hint
+      // Hide doors and hint
       doorL.classList.add("is-gone");
       doorR.classList.add("is-gone");
       hint.style.opacity = "0";
@@ -208,7 +210,7 @@ function startLoop() {
       }
 
       door_armed = false; //stop the loop
-      rafId = null; 
+      rafId = null;
       return;
     }
 
@@ -228,17 +230,17 @@ function arm() {
   scene.tabIndex = 0;
   try {
     scene.focus({ preventScroll: true });
-  } catch (_) {}
+  } catch (_) { }
 
-    //start the main loop to track clicks and move doors
+  //start the main loop to track clicks and move doors
   startLoop();
 }
 
 // Leaving panel 6: stop loop, reset state, and prepare for replay next time
 function disarm() {
   door_armed = false; //stop counting clicks
-   // Stop the main loop if running
-  if (rafId) cancelAnimationFrame(rafId); 
+  // Stop the main loop if running
+  if (rafId) cancelAnimationFrame(rafId);
   rafId = null;
 
   //restore overlay visuals and hint for next visit
@@ -277,7 +279,7 @@ const io = new IntersectionObserver( //referred to https://developer.mozilla.org
   (entries) => {
     //this callback runs every time one of the observed elements crosses one of the visibility thresholds defined below
     entries.forEach((entry) => {
-        //we only care about our specific section (#panel6)
+      //we only care about our specific section (#panel6)
       if (entry.target !== section) return;
 
       //when the section becomes mostly visible ( > 60% on screen ), we "arm" the door logic so it slides closed and becomes clickable
@@ -297,3 +299,41 @@ const io = new IntersectionObserver( //referred to https://developer.mozilla.org
 // - Begin observing the section for enter/leave transitions
 setDoors(100);
 io.observe(section);
+
+
+
+
+
+
+
+// lock scrolling
+function initScrollLock() {
+  document.body.classList.add('scroll-locked');
+  document.querySelector('.snap').classList.add('scroll-locked');
+
+  // get the start button and second panel
+  const startButton = document.getElementById('startButton');
+  const secondPanel = document.querySelectorAll('section')[1]; // Get the second section
+
+  if (startButton && secondPanel) {
+    startButton.addEventListener('click', function () {
+      // remove scroll lock
+      document.body.classList.remove('scroll-locked');
+      document.querySelector('.snap').classList.remove('scroll-locked');
+
+      // move to second panel
+      secondPanel.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+
+      console.log('Scroll unlocked! Moving to panel 2...');
+    });
+  }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+  initScrollLock();
+});
+
