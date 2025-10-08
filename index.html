@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Comic Panels</title>
+    <title>The NYUAD Hunger Quest</title>
     <!-- for the font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,21 +15,44 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
-    <!-- LANDING PAGE TODO -->
     <div class="snap">
-      <section>
-        <h1 style="margin: 0">landing page</h1>
-      </section>
+      <!-- landing page with panel 1 and text -->
+      <section class="landing" style="--fx: 43%; --fy: 60%; --zoom: 2.5">
+        <div class="hint-text" id="hint">
+          Click the panel to enable scrolling!
+        </div>
 
+        <div class="two-col">
+          <div class="frame">
+            <img class="panel" src="assets/images/p1.png" alt="Panel 1" />
+            <button
+              class="invisible-btn"
+              id="startButton"
+              aria-label="Start the story"
+            ></button>
+          </div>
+          <div class="narr">
+            <h1 class="title">The NYUAD Hunger Quest</h1>
+            <p>
+              Meet Josh, an NYUAD student and survivor of the four-hour
+              starvation block built into his class schedule. <br /><br />His
+              destination: the legendary East Dining Hall, or as the locals call
+              it... D2. <br /><br />The mission is clear. The path... long. The
+              appetite... unstoppable.
+            </p>
+          </div>
+        </div>
+      </section>
       <!-- section 2 with panel 2 and text -->
       <section style="--fx: 60%; --fy: 70%; --zoom: 2">
         <div class="frame">
           <img class="panel" src="assets/images/p2.png" alt="Panel 2" />
         </div>
         <p>
-          You finally reach D2 after an arduous, long hike. Finally, upon the
-          doors of the grand institution, you pull on the door— surprisingly to
-          no avail. You pull harder— still the doors don’t budge.
+          After an exhausting trek across campus, Josh finally arrives at D2.
+          But as he grab the door handles and pulls... nothing. He tries
+          again... still nothing. The doors of D2 stand unmoved, mocking his
+          hunger.
         </p>
       </section>
 
@@ -40,10 +63,9 @@
             <img class="panel" src="assets/images/p3.png" alt="Panel 3" />
           </div>
           <p class="narr right-text">
-            You try and try again, the smell of delicious food so tantalizingly
-            close yet still out of reach. Out of frustration, you kick the door—
-            hard— just hoping the doors would open already. Little did you know
-            that that was going to be a mistake.
+            Josh's determination turns to desperation. He pulls, he yanks, he
+            summons every bit of gym strength he swore he'd been building. In a
+            final act of desperation, he kicks the door... a terrible choice.
           </p>
         </div>
       </section>
@@ -52,16 +74,16 @@
       <section>
         <div class="two-col">
           <p class="narr left-text">
-            You turn around to look back at the door, to your sheer horror, an
-            angered face has appeared on the D2 door. Out of sheer shock, you
-            stumble back and fall. The door has become ALIVE!!!
+            The air falls silent. A faint vibration hums through the frame.
+            Then, two glowing eyes appear on the glass, glaring back at him. The
+            D2 door has awakened! And it is furious.
           </p>
           <div class="frame">
             <img
               class="panel"
               src="assets/images/p4.png"
               alt="Panel 4"
-              data-zoom-seq="100% 20% 1.5; 0% 80% 2.5"
+              data-zoom-seq="0% 80% 2.5; 100% 20% 1.5"
             />
           </div>
         </div>
@@ -78,8 +100,9 @@
           />
         </div>
         <p>
-          The door grows arms and legs! It’s ready to fight. You prepare
-          yourself to face off against the door.
+          Metal groans. Hinges twist. Arms emerge from the doorway like steel
+          vines. The once-innocent entrance now stands ready for battle. Josh
+          clenches his fists, he'll do whatever it takes to get inside.
         </p>
       </section>
 
@@ -95,15 +118,16 @@
             />
           </div>
           <p>
-            You triumph, and finally, you enter D2, earning your well-deserved
-            breakfast
+            The door crashes open, defeated at last! Josh, breathless but
+            victorious, claims his hard-earned breakfast, the taste of triumph
+            sweet on his tongue!
           </p>
         </div>
 
         <div class="door-overlay" id="doorScene">
           <div id="doorL" class="door left" aria-label="Left door"></div>
           <div id="doorR" class="door right" aria-label="Right door"></div>
-          <p id="doorHint">Click fast to open the doors!</p>
+          <p id="doorHint">Click fast to help Josh defeat the doors!</p>
         </div>
       </section>
     </div>
