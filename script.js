@@ -73,13 +73,13 @@ document.querySelectorAll("img.panel[data-zoom-seq]").forEach((img) => {
 
     //for each zoom stop
     steps.forEach((st) => {
-        //wait t milliseconds,
-        //then apply that focal point and scale (using CSS transform)
-        timers.push(setTimeout(() => applyOriginAndScale(st), t));
+      //wait t milliseconds,
+      //then apply that focal point and scale (using CSS transform)
+      timers.push(setTimeout(() => applyOriginAndScale(st), t));
 
-        //after each step, increase the timer offset by DWELL_MS
-        //so the next step starts after the previous one has "lingered" for a bit
-        t += DWELL_MS;
+      //after each step, increase the timer offset by DWELL_MS
+      //so the next step starts after the previous one has "lingered" for a bit
+      t += DWELL_MS;
     });
 
     //after the last step: linger briefly, then zoom all the way back out
@@ -103,7 +103,6 @@ document.querySelectorAll("img.panel[data-zoom-seq]").forEach((img) => {
   //desktop hover interactions
   img.addEventListener("mouseenter", playOnce);
   img.addEventListener("mouseleave", stopAndReset);
-
 });
 
 /*
@@ -141,7 +140,7 @@ function setDoors(pct) {
 // 2) Next frame: animate to closed (center) using CSS transition
 // 3) After that, switch to snappier transition for CPS-driven motion
 function resetToClosedWithSlide() {
-// reveal the doors and hint
+  // reveal the doors and hint
   doorL.classList.remove("is-gone");
   doorR.classList.remove("is-gone");
   hint.style.opacity = "1";
@@ -194,10 +193,11 @@ function startLoop() {
 
     //if doors are fully open: fade doors, disable overlay, and reveal content underneath
     if (open >= FULLY_OPEN) {
-        // Hide doors and hint
+      // Hide doors and hint
       doorL.classList.add("is-gone");
       doorR.classList.add("is-gone");
       hint.style.opacity = "0";
+      hint.style.animation = "none";
       scene.style.pointerEvents = "none"; //let user interact with revealed content
 
       //reveal underlying panel with a pop-in zoom (CSS handles the animation)
@@ -208,7 +208,7 @@ function startLoop() {
       }
 
       door_armed = false; //stop the loop
-      rafId = null; 
+      rafId = null;
       return;
     }
 
@@ -221,6 +221,7 @@ function startLoop() {
 function arm() {
   door_armed = true; //enable click counting
   scene.style.pointerEvents = "auto"; //overlay should intercept clicks while closed
+  hint.style.animation = "pulse 0.5s infinite";
   zeroState(); //reset counters and door position
   resetToClosedWithSlide(); //play the auto slide-shut animation
 
@@ -230,15 +231,15 @@ function arm() {
     scene.focus({ preventScroll: true });
   } catch (_) {}
 
-    //start the main loop to track clicks and move doors
+  //start the main loop to track clicks and move doors
   startLoop();
 }
 
 // Leaving panel 6: stop loop, reset state, and prepare for replay next time
 function disarm() {
   door_armed = false; //stop counting clicks
-   // Stop the main loop if running
-  if (rafId) cancelAnimationFrame(rafId); 
+  // Stop the main loop if running
+  if (rafId) cancelAnimationFrame(rafId);
   rafId = null;
 
   //restore overlay visuals and hint for next visit
@@ -277,7 +278,7 @@ const io = new IntersectionObserver( //referred to https://developer.mozilla.org
   (entries) => {
     //this callback runs every time one of the observed elements crosses one of the visibility thresholds defined below
     entries.forEach((entry) => {
-        //we only care about our specific section (#panel6)
+      //we only care about our specific section (#panel6)
       if (entry.target !== section) return;
 
       //when the section becomes mostly visible ( > 60% on screen ), we "arm" the door logic so it slides closed and becomes clickable
@@ -297,3 +298,95 @@ const io = new IntersectionObserver( //referred to https://developer.mozilla.org
 // - Begin observing the section for enter/leave transitions
 setDoors(100);
 io.observe(section);
+
+/*This section is for setting the sound effects and landing page scrolling*/
+
+//link each panel to its corresponding sound file
+const panelSounds = {
+  1: new Audio("assets/sounds/panel1.mp3"),
+  2: new Audio("assets/sounds/panel2.mp3"),
+  3: new Audio("assets/sounds/panel3.mp3"),
+  4: new Audio("assets/sounds/panel4.mp3"),
+  5: new Audio("assets/sounds/panel5.mp3"),
+  6: new Audio("assets/sounds/panel6.mp3"),
+};
+
+let currentSound = null; //keeps track of whichever sound is currently playing
+
+//plays the sound that matches the given panel number
+function playPanelSound(panelNumber) {
+  //if a sound is already playing, don't interrupt it
+  if (currentSound && !currentSound.ended) {
+    return;
+  }
+
+  const sound = panelSounds[panelNumber];
+  if (sound) {
+    sound.currentTime = 0; //restart from the beginning
+    sound.play().catch((e) => e); //play the sound (ignore any autoplay errors)
+    currentSound = sound;
+
+    //once the sound finishes, clear the currentSound variable
+    sound.onended = () => {
+      currentSound = null;
+    };
+  }
+}
+
+//connects sound effects to each panel image
+function initSoundEffects() {
+  const sections = document.querySelectorAll("section");
+
+  sections.forEach((section, index) => {
+    const panelNumber = index + 1;
+    const panelImage = section.querySelector("img.panel");
+
+    //only attach sound if this panel has a matching image and sound file
+    if (panelImage && panelSounds[panelNumber]) {
+      let hasPlayed = false; //makes sure the sound plays only once per hover
+
+      panelImage.addEventListener("mouseenter", () => {
+        if (!hasPlayed) {
+          playPanelSound(panelNumber);
+          hasPlayed = true;
+        }
+      });
+
+      //reset when the mouse leaves, so it can play again next time
+      panelImage.addEventListener("mouseleave", () => {
+        hasPlayed = false;
+      });
+    }
+  });
+}
+
+//run once the DOM has fully loaded
+document.addEventListener("DOMContentLoaded", function () {
+  initScrollLock();
+  initSoundEffects();
+});
+
+//locks scrolling until the user presses the landing panel
+function initScrollLock() {
+  //lock scrolling until the start button is pressed
+  document.body.classList.add("scroll-locked");
+  document.querySelector(".snap").classList.add("scroll-locked");
+
+  //grab the start button
+  const startButton = document.getElementById("startButton");
+
+  if (startButton) {
+    startButton.addEventListener("click", function () {
+      //unlock scrolling
+      document.body.classList.remove("scroll-locked");
+      document.querySelector(".snap").classList.remove("scroll-locked");
+
+      //play the first sound when starting
+      playPanelSound(1);
+
+      //remove the invisible start button + hint text once clicked
+      document.getElementById("startButton").remove();
+      document.getElementById("hint").remove();
+    });
+  }
+}
